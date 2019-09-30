@@ -134,7 +134,7 @@ if [ ! -d spark ]; then
 
   # Setup log4j config to reduce logging output
   cp $SPARK_HOME/conf/log4j.properties.template $SPARK_HOME/conf/log4j.properties
-  sed -i .bak 's/INFO/ERROR/g' $SPARK_HOME/conf/log4j.properties
+  sed -i.bak 's/INFO/ERROR/g' $SPARK_HOME/conf/log4j.properties
 else
   echo "Spark already installed, skipping Spark..."
 fi
