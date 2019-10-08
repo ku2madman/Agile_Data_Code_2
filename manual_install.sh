@@ -196,11 +196,25 @@ echo 'export PYTHONPATH=$PYTHONPATH:$PROJECT_HOME/lib' >> ~/.bash_profile
 if [ -z `which elasticsearch` ] && [ ! -d elasticsearch ]; then
   echo "Installing elasticsearch to $PROJECT_HOME/elasticsearch ..."
 
-  curl -Lko /tmp/elasticsearch-5.1.1.tar.gz https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.1.1.tar.gz
+  curl -Lko /tmp/elasticsearch-7.4.0.tar.gz https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.4.0-linux-x86_64.tar.gz
   mkdir elasticsearch
-  tar -xvzf /tmp/elasticsearch-5.1.1.tar.gz -C elasticsearch --strip-components=1
+  tar -xvzf /tmp/elasticsearch-7.4.0.tar.gz -C elasticsearch --strip-components=1
 
   # Run elasticsearch
+  # Note 1. ES can't be started by root, you should create a user and asign es directory to it
+  ###############################################
+  # useradd -c 'ES user' -d /home/esroot esroot
+  # passwd esroot
+  # chown -R esroot <es directory>
+  # su esroot
+  ###############################################
+  # Note 2. Change the following settings in elasticsearch.yml if you want to acces ES from IP other than localhost or 127.0.0.1
+  ###############################################
+  # node.name: node-1
+  # network.host: <My IP>
+  # cluster.initial_master_nodes: ["node-1"]
+  ###############################################
+  # One more thing, add "vm.max_map_count = 262144" in /etc/systrl.conf, then execute "systrl -p" to make it effect
   elasticsearch/bin/elasticsearch -d # re-run if you shutdown your computer
 else
   echo "Skipping elasticsearch, already installed..."
@@ -208,29 +222,29 @@ fi
 
 # Install Elasticsearch for Hadoop
 echo "Installing elasticsearch-hadoop to $PROJECT_HOME/elasticsearch-hadoop ..."
-curl -Lko /tmp/elasticsearch-hadoop-5.0.0-alpha5.zip http://download.elastic.co/hadoop/elasticsearch-hadoop-5.0.0-alpha5.zip
-unzip /tmp/elasticsearch-hadoop-5.0.0-alpha5.zip
-mv elasticsearch-hadoop-5.0.0-alpha5 elasticsearch-hadoop
-cp elasticsearch-hadoop/dist/elasticsearch-hadoop-5.0.0-alpha5.jar lib/
-cp elasticsearch-hadoop/dist/elasticsearch-spark-20_2.10-5.0.0-alpha5.jar lib/
+curl -Lko /tmp/elasticsearch-hadoop-7.4.0.zip https://artifacts.elastic.co/downloads/elasticsearch-hadoop/elasticsearch-hadoop-7.4.0.zip
+unzip /tmp/elasticsearch-hadoop-7.4.0.zip
+mv elasticsearch-hadoop-7.4.0 elasticsearch-hadoop
+cp elasticsearch-hadoop/dist/elasticsearch-hadoop-7.4.0.jar lib/
+cp elasticsearch-hadoop/dist/elasticsearch-spark-20_2.11-7.4.0.jar lib/
 echo "spark.speculation false" >> $PROJECT_HOME/spark/conf/spark-defaults.conf
 
 # Install and add snappy-java and lzo-java to our classpath below via spark.jars
 echo "Installing snappy-java and lzo-hadoop to $PROJECT_HOME/lib ..."
-curl -Lko lib/snappy-java-1.1.2.6.jar http://central.maven.org/maven2/org/xerial/snappy/snappy-java/1.1.2.6/snappy-java-1.1.2.6.jar
-curl -Lko lib/lzo-hadoop-1.0.5.jar http://central.maven.org/maven2/org/anarres/lzo/lzo-hadoop/1.0.0/lzo-hadoop-1.0.0.jar
+curl -Lko lib/snappy-java-1.1.7.3.jar http://central.maven.org/maven2/org/xerial/snappy/snappy-java/1.1.7.3/snappy-java-1.1.7.3.jar
+curl -Lko lib/lzo-hadoop-1.0.6.jar http://central.maven.org/maven2/org/anarres/lzo/lzo-hadoop/1.0.6/lzo-hadoop-1.0.6.jar
 
 # Setup mongo and elasticsearch jars for Spark
 echo "spark.jars $PROJECT_HOME/lib/mongo-hadoop-spark-2.0.0-rc0.jar,\
-$PROJECT_HOME/lib/mongo-java-driver-3.2.2.jar,\
-$PROJECT_HOME/lib/mongo-hadoop-2.0.0-rc0.jar,\
-$PROJECT_HOME/lib/elasticsearch-spark-20_2.10-5.0.0-alpha5.jar,\
-$PROJECT_HOME/lib/snappy-java-1.1.2.6.jar,\
-$PROJECT_HOME/lib/lzo-hadoop-1.0.0.jar" \
+$PROJECT_HOME/lib/mongo-java-driver-3.4.0.jar,\
+$PROJECT_HOME/lib/mongo-hadoop-2.0.2.jar,\
+$PROJECT_HOME/lib/elasticsearch-spark-20_2.11-7.4.0.jar,\
+$PROJECT_HOME/lib/snappy-java-1.1.7.3.jar,\
+$PROJECT_HOME/lib/lzo-hadoop-1.0.6.jar" \
   >> spark/conf/spark-defaults.conf
 
 # Setup spark classpath for snappy for parquet... required for OS X 10.11, others can skip
-echo "SPARK_CLASSPATH=$PROJECT_HOME/lib/snappy-java-1.1.2.6.jar" >> spark/conf/spark-env.sh
+echo "SPARK_CLASSPATH=$PROJECT_HOME/lib/snappy-java-1.1.7.3.jar" >> spark/conf/spark-env.sh
 
 #
 # Install Apache Kafka and dependencies
