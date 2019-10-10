@@ -163,7 +163,7 @@ fi
 
 # Get the MongoDB Java Driver
 echo "Fetching the MongoDB Java Driver to $PROJECT_HOME/lib/ ..."
-curl -Lko lib/mongo-java-driver-3.4.0.jar http://central.maven.org/maven2/org/mongodb/mongo-java-driver/3.4.0/mongo-java-driver-3.4.0.jar
+curl -Lko lib/mongo-java-driver-3.4.1.jar http://central.maven.org/maven2/org/mongodb/mongo-java-driver/3.4.1/mongo-java-driver-3.4.1.jar
 
 # Install the mongo-hadoop project in the mongo-hadoop directory in the root of our project.
 echo "Installing the mongo-hadoop project in $PROJECT_HOME/mongo-hadoop ..."
@@ -235,10 +235,7 @@ curl -Lko lib/snappy-java-1.1.7.3.jar http://central.maven.org/maven2/org/xerial
 curl -Lko lib/lzo-hadoop-1.0.6.jar http://central.maven.org/maven2/org/anarres/lzo/lzo-hadoop/1.0.6/lzo-hadoop-1.0.6.jar
 
 # Setup mongo and elasticsearch jars for Spark
-echo "spark.jars $PROJECT_HOME/lib/mongo-hadoop-spark-2.0.0-rc0.jar,\
-$PROJECT_HOME/lib/mongo-java-driver-3.4.0.jar,\
-$PROJECT_HOME/lib/mongo-hadoop-2.0.2.jar,\
-$PROJECT_HOME/lib/elasticsearch-spark-20_2.11-7.4.0.jar,\
+echo "spark.jars $PROJECT_HOME/lib/elasticsearch-spark-20_2.11-7.4.0.jar,\
 $PROJECT_HOME/lib/snappy-java-1.1.7.3.jar,\
 $PROJECT_HOME/lib/lzo-hadoop-1.0.6.jar" \
   >> spark/conf/spark-defaults.conf
