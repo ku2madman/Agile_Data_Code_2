@@ -162,6 +162,10 @@ else
 fi
 
 # Get the MongoDB Java Driver
+echo "Fetching the MongoDB Spark Connector to $PROJECT_HOME/lib/ ..."
+curl -Lko lib/mongo-spark-connector_2.11-2.4.1.jar https://repo1.maven.org/maven2/org/mongodb/spark/mongo-spark-connector_2.11/2.4.1/mongo-spark-connector_2.11-2.4.1.jar
+
+# Get the MongoDB Java Driver
 echo "Fetching the MongoDB Java Driver to $PROJECT_HOME/lib/ ..."
 curl -Lko lib/mongo-java-driver-3.4.1.jar http://central.maven.org/maven2/org/mongodb/mongo-java-driver/3.4.1/mongo-java-driver-3.4.1.jar
 
