@@ -5,8 +5,8 @@ from bson import json_util
 import config
 import json
 
-from pyelasticsearch import ElasticSearch
-elastic = ElasticSearch(config.ELASTIC_URL)
+from elasticsearch import Elasticsearch
+elastic = Elasticsearch(config.ELASTIC_URL)
 
 # Process elasticsearch hits and return flights records
 def process_search(results):
