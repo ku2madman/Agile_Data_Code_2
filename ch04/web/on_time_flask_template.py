@@ -148,7 +148,8 @@ def search_flights():
     query['query']['bool']['must'].append({'match': {'FlightNum': flight_number}})
   
   # Query elasticsearch, process to get records and count
-  results = elastic.search(query)
+  # Attention, specify index here instead in url, or you'll find nothing
+  results = elastic.search(body=query, index='agile_data_science')
   # Fill empty url parameters
   if nav_path.find('?') == -1:
     nav_path += "?Carrier=&Origin=&Dest=&FlightDate=&TailNum=&FlightNum="
