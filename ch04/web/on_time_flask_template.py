@@ -13,7 +13,7 @@ def process_search(results):
   records = []
   total = 0
   if results['hits'] and results['hits']['hits']:
-    total = results['hits']['total']
+    total = results['hits']['total']['value']
     hits = results['hits']['hits']
     for hit in hits:
       record = hit['_source']
@@ -121,19 +121,16 @@ def search_flights():
       'bool': {
         'must': []}
     },
-<<<<<<< HEAD
-      'sort': [
+    'sort': [
       {'FlightDate': 'asc'},
-     ],
-     'from': start,
-     'size': config.RECORDS_PER_PAGE
-=======
+    ],
+    'from': start,
+    'size': config.RECORDS_PER_PAGE,
     'sort': [
       {'FlightDate': 'asc'},
     ],
     'from': start,
     'size': config.RECORDS_PER_PAGE
->>>>>>> e67f89d00d650b9208180d83b115727e7af238fa
   }
   
   # Add any search parameters present
@@ -152,6 +149,9 @@ def search_flights():
   
   # Query elasticsearch, process to get records and count
   results = elastic.search(query)
+  # Fill empty url parameters
+  if nav_path.find('?') == -1:
+    nav_path += "?Carrier=&Origin=&Dest=&FlightDate=&TailNum=&FlightNum="
   flights, flight_count = process_search(results)
   
   # Persist search parameters in the form template
